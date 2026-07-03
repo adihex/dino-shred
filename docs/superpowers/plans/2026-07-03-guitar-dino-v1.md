@@ -1846,7 +1846,7 @@ git commit -m "feat: HUD - judgment popups, error bar, session histogram"
 - Consumes: `Dino`, `Ground`, `Obstacle` (Tasks 2/11), `Spawner` (Task 11), `Conductor` (Task 3), `Judge/Grade/Judgment` (Task 8), `CalibrationSession` (Task 9), `Hud` (Task 12), `OnsetEvent` (Task 5).
 - Produces: `State` (Enum: `MENU, CALIBRATE, PLAYING, GAME_OVER`); `RhythmGame(bpm: float = 80.0, offset_s: float = 0.0, count_in_beats: int = 4)` with `state: State`, `conductor: Conductor | None`, `on_conductor_change: Callable[[Conductor], None] | None` (hook the app uses to swap the engine's ClickScheduler), `start_playing(t_now: float) -> None`, `start_calibration(t_now: float) -> None`, `handle_onset(ev: OnsetEvent) -> None`, `handle_key(key: int, down: bool, t_now: float) -> None`, `update(t: float) -> None`, `draw(screen: pygame.Surface, t: float) -> None`, `calibration_result: tuple[float, float] | None`, `banner: str` (watchdog messages, set by the app). Task 14 consumes exactly these.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_game.py`:
 
@@ -1929,12 +1929,12 @@ def test_keyboard_space_acts_as_onset() -> None:
     assert not g.dino.on_ground
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/test_game.py -v`
 Expected: FAIL — module not found
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `dino_shred/game/game.py`:
 
@@ -2109,12 +2109,12 @@ class RhythmGame:
 __all__ = ["LEAD_IN_S", "RhythmGame", "State"]
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/test_game.py -v`
 Expected: 8 PASS
 
-- [ ] **Step 5: Lint, typecheck, commit**
+- [x] **Step 5: Lint, typecheck, commit**
 
 ```bash
 uv run ruff check && uv run ty check
