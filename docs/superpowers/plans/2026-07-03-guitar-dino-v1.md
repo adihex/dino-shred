@@ -1504,7 +1504,7 @@ git commit -m "feat: calibration persistence with setup-staleness check"
 - Consumes: `Conductor` (Task 3), `config` (Task 1), `Dino` (Task 2 — for width alignment).
 - Produces: `Obstacle(beat_n: int, conductor: Conductor, variant: int)` with `x(t: float) -> float`, `rect(t: float) -> pygame.Rect`, `is_gone(t: float) -> bool`, `draw(screen: pygame.Surface, t: float) -> None`, attrs `beat_n, variant, width, height, y`; `Spawner(conductor: Conductor, first_beat: int, horizon_s: float = 3.0, seed: int | None = None)` with `update(t: float) -> list[Obstacle]` (newly spawned this call) and `density(beat_n: int) -> int`. V1 spawns **cactus variants (0, 1) only** — birds require ducking, which a guitar can't express until the chug classifier exists (M5).
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_spawner.py`:
 
@@ -1554,12 +1554,12 @@ def test_density_ramps_4_2_1() -> None:
     assert s.density(4 + 48) == 1  # then every beat
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/test_spawner.py -v`
 Expected: FAIL — ImportError
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 Append to `dino_shred/game/objects.py`:
 
@@ -1654,12 +1654,12 @@ class Spawner:
 __all__ = ["Spawner"]
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/test_spawner.py -v`
 Expected: 5 PASS
 
-- [ ] **Step 5: Lint, typecheck, commit**
+- [x] **Step 5: Lint, typecheck, commit**
 
 ```bash
 uv run ruff check && uv run ty check

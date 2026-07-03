@@ -3,6 +3,7 @@
 import pygame
 
 from dino_shred import config
+from dino_shred.rhythm.conductor import Conductor
 
 
 class Dino:
@@ -116,3 +117,41 @@ class Ground:
                 2,
             )
             x += period
+
+
+class Obstacle:
+    """A cactus bound to a beat: its position is DERIVED from time (ADR 0004).
+
+    x(t) is computed fresh every frame from the conductor — never integrated —
+    so the obstacle's center crosses the dino's center exactly at beat_time(n).
+    Variants: 0 = small cactus, 1 = tall cactus. (Birds return with the chug
+    classifier in M5 — a guitar can't duck yet.)
+    """
+
+    SIZES = {0: (20, 40), 1: (24, 54)}
+
+    def __init__(self, beat_n: int, conductor: Conductor, variant: int) -> None:
+        self.beat_n = beat_n
+        self.conductor = conductor
+        self.variant = variant
+        self.width, self.height = self.SIZES[variant]
+        self.y = config.GROUND_Y - self.height
+        # align obstacle center with dino center at the beat
+        dino_center = config.DINO_X + Dino.WIDTH / 2
+        self._x_at_beat = dino_center - self.width / 2
+
+    def x(self, t: float) -> float:
+        dt = self.conductor.beat_time(self.beat_n) - t
+        return self._x_at_beat + dt * config.PX_PER_SEC
+
+    def rect(self, t: float) -> pygame.Rect:
+        x = self.x(t)
+        return pygame.Rect(int(x) + 2, self.y + 2, self.width - 4, self.height - 4)
+
+    def is_gone(self, t: float) -> bool:
+        return self.x(t) + self.width < -50
+
+    def draw(self, screen: pygame.Surface, t: float) -> None:
+        pygame.draw.rect(
+            screen, config.GREY, pygame.Rect(int(self.x(t)), self.y, self.width, self.height)
+        )
