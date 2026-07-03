@@ -13,3 +13,6 @@ wheels/
 .omx
 .omp
 .slim
+
+# per-machine calibration
+config.json

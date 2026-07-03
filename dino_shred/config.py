@@ -1,5 +1,9 @@
 """Central constants. Gameplay feel and audio geometry live here (ADR 0001, 0004)."""
 
+import json
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
 # --- audio geometry (ADR 0002) ---
 SAMPLE_RATE: int = 48000
 BLOCKSIZE: int = 256  # samples per hop; 5.333 ms at 48 kHz
@@ -28,3 +32,33 @@ JUMP_HEIGHT_PX: float = 90.0
 _AIR_FRAMES: float = AIR_TIME_S * FPS
 JUMP_VEL: float = -4.0 * JUMP_HEIGHT_PX / _AIR_FRAMES  # px/frame, negative = up
 GRAVITY: float = -2.0 * JUMP_VEL / _AIR_FRAMES  # px/frame^2, positive = down
+
+
+# --- calibration persistence (spec 3.6) -------------------------------------
+CONFIG_PATH = Path("config.json")
+
+
+@dataclass(frozen=True)
+class CalibrationData:
+    offset_s: float
+    spread_s: float
+    date: str
+    device: str
+    detector: str
+    blocksize: int
+
+    def is_stale(self, device: str, detector: str, blocksize: int) -> bool:
+        """Calibration only holds for the exact setup it was measured under."""
+        return (self.device, self.detector, self.blocksize) != (device, detector, blocksize)
+
+
+def save_calibration(data: CalibrationData, path: Path = CONFIG_PATH) -> None:
+    path.write_text(json.dumps(asdict(data), indent=2))
+
+
+def load_calibration(path: Path = CONFIG_PATH) -> CalibrationData | None:
+    try:
+        return CalibrationData(**json.loads(path.read_text()))
+    except (OSError, ValueError, TypeError):
+        return None
+

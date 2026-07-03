@@ -1388,7 +1388,7 @@ git commit -m "feat: calibration - median offset with MAD outlier rejection"
 - Consumes: constants from Task 1 (same module).
 - Produces: `CalibrationData` (frozen dataclass: `offset_s: float`, `spread_s: float`, `date: str`, `device: str`, `detector: str`, `blocksize: int`); `save_calibration(data: CalibrationData, path: Path = CONFIG_PATH) -> None`; `load_calibration(path: Path = CONFIG_PATH) -> CalibrationData | None`; `CONFIG_PATH: Path` (= `Path("config.json")`); method `CalibrationData.is_stale(device: str, detector: str, blocksize: int) -> bool`. Task 13/14 consume exactly these.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_config_persistence.py`:
 
@@ -1429,12 +1429,12 @@ def test_staleness_on_any_mismatch() -> None:
     assert d.is_stale("Scarlett 2i2", "energy", 256)    # interface changed
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/test_config_persistence.py -v`
 Expected: FAIL — ImportError (names don't exist yet)
 
-- [ ] **Step 3: Implement — append to `dino_shred/config.py`**
+- [x] **Step 3: Implement — append to `dino_shred/config.py`**
 
 ```python
 # --- calibration persistence (spec 3.6) -------------------------------------
@@ -1479,12 +1479,12 @@ Append to `.gitignore`:
 config.json
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/test_config_persistence.py -v`
 Expected: 4 PASS
 
-- [ ] **Step 5: Lint, typecheck, commit**
+- [x] **Step 5: Lint, typecheck, commit**
 
 ```bash
 uv run ruff check && uv run ty check

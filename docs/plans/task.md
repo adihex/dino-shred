@@ -9,8 +9,8 @@
 | Task 7 | Hardware check tool | Completed |
 | Task 8 | Judge — timing windows, one-onset-per-beat, miss sweeping | Completed |
 | Task 9 | Calibration — median offset with MAD outlier rejection | Completed |
-| Task 10 | Calibration persistence + staleness check | In Progress |
-| Task 11 | Beat-anchored Obstacle + Spawner | Not Started |
+| Task 10 | Calibration persistence + staleness check | Completed |
+| Task 11 | Beat-anchored Obstacle + Spawner | In Progress |
 | Task 12 | HUD — judgment feedback, error bar, histogram | Not Started |
 | Task 13 | RhythmGame — state machine tying it all together | Not Started |
 | Task 14 | App wiring — CLI, engine hookup, watchdogs, keyboard-only mode | Not Started |
