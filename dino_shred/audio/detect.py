@@ -46,9 +46,7 @@ class EnergyGate:
             self._armed = False
             if t_frame - self._last_onset_t >= self.refractory_s:
                 self._last_onset_t = t_frame
-                return OnsetEvent(
-                    t=t_frame, strength=rms_db - self.threshold_db, detector="energy"
-                )
+                return OnsetEvent(t=t_frame, strength=rms_db - self.threshold_db, detector="energy")
         elif not self._armed and rms_db < self.threshold_db - self.hysteresis_db:
             self._armed = True  # signal decayed: re-arm for the next attack
         return None

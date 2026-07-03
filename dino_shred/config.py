@@ -61,4 +61,3 @@ def load_calibration(path: Path = CONFIG_PATH) -> CalibrationData | None:
         return CalibrationData(**json.loads(path.read_text()))
     except (OSError, ValueError, TypeError):
         return None
-

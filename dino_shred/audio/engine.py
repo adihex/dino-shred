@@ -29,10 +29,7 @@ class DeviceNotFoundError(RuntimeError):
 def find_device(name_substring: str = "M-Track") -> int:
     devices = sd.query_devices()
     for i, dev in enumerate(devices):
-        if (
-            name_substring.lower() in dev["name"].lower()
-            and dev["max_input_channels"] >= 2
-        ):
+        if name_substring.lower() in dev["name"].lower() and dev["max_input_channels"] >= 2:
             return i
     listing = "\n".join(f"  [{i}] {d['name']}" for i, d in enumerate(devices))
     raise DeviceNotFoundError(

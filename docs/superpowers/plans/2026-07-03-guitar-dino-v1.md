@@ -2329,14 +2329,14 @@ ADC/DAC deltas, calibration distribution on the real rig). Tune `PX_PER_SEC`, BP
 **Files:**
 - Modify: `CLAUDE.md` (commands + architecture sections)
 
-- [ ] **Step 1: Full quality gate**
+- [x] **Step 1: Full quality gate**
 
 ```bash
 uv run ruff check && uv run ruff format --check && uv run ty check && uv run pytest -q
 ```
 Expected: all clean, all tests pass. Fix anything that isn't — then re-run.
 
-- [ ] **Step 2: Update CLAUDE.md**
+- [x] **Step 2: Update CLAUDE.md**
 
 In the Commands section add:
 
@@ -2355,7 +2355,7 @@ conductor/judge/calibration, `game/` pygame layer). Point to
 Note the two invariants: all timing on the stream clock (ADR 0004) and pygame.mixer
 never initialized (ADR 0002).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add CLAUDE.md

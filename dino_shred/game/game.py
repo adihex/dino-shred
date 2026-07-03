@@ -139,7 +139,8 @@ class RhythmGame:
         elif self.state is State.CALIBRATE:
             assert self.calibration is not None
             self._overlay(
-                screen, "CALIBRATE",
+                screen,
+                "CALIBRATE",
                 f"chug with the click - {self.calibration.hits}/{self.calibration.min_hits}",
             )
         elif self.state is State.GAME_OVER:

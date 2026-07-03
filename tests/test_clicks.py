@@ -47,6 +47,6 @@ def test_bar_start_is_accented() -> None:
     s = ClickScheduler(c, sr=48000, beats_per_bar=4)
     beat0 = np.zeros(4800, dtype=np.float32)
     beat1 = np.zeros(4800, dtype=np.float32)
-    s.render(0.0, beat0)   # beat 0 -> accent
-    s.render(1.0, beat1)   # beat 1 -> normal
+    s.render(0.0, beat0)  # beat 0 -> accent
+    s.render(1.0, beat1)  # beat 1 -> normal
     assert np.abs(beat0).max() > np.abs(beat1).max()

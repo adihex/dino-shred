@@ -39,8 +39,10 @@ def main(argv: list[str] | None = None) -> None:
     if not args.keyboard_only:
         try:
             engine = AudioEngine(
-                detector=EnergyGate(), scheduler=None,
-                device=args.device, input_channel=args.input_channel,
+                detector=EnergyGate(),
+                scheduler=None,
+                device=args.device,
+                input_channel=args.input_channel,
             )
             engine.start()
         except DeviceNotFoundError as e:
@@ -86,9 +88,12 @@ def main(argv: list[str] | None = None) -> None:
                 offset_s, spread_s = game.calibration_result
                 config.save_calibration(
                     config.CalibrationData(
-                        offset_s=offset_s, spread_s=spread_s,
-                        date=date.today().isoformat(), device="M-Track Solo",
-                        detector="energy", blocksize=config.BLOCKSIZE,
+                        offset_s=offset_s,
+                        spread_s=spread_s,
+                        date=date.today().isoformat(),
+                        device="M-Track Solo",
+                        detector="energy",
+                        blocksize=config.BLOCKSIZE,
                     )
                 )
                 game.calibration_result = None
@@ -102,9 +107,7 @@ def main(argv: list[str] | None = None) -> None:
                     last_watchdog = now
                     silent_for = 0.0 if engine.take_peak() > 1e-4 else silent_for + 1.0
                     if silent_for >= 3.0:
-                        game.banner = (
-                            "no input signal - check gain + macOS Microphone permission"
-                        )
+                        game.banner = "no input signal - check gain + macOS Microphone permission"
                     elif game.banner.startswith("no input"):
                         game.banner = ""
                     if abs(engine.time - engine.status.last_callback_time) > 0.5:
