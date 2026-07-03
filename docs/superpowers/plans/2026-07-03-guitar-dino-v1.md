@@ -921,7 +921,7 @@ git commit -m "feat: AudioEngine duplex callback core with watchdog status"
 - Consumes: `AudioEngine`, `find_device`, `DeviceNotFoundError` (Task 6), `EnergyGate` (Task 5), `ClickScheduler` (Task 4), `Conductor` (Task 3).
 - Produces: `format_hit(onset_t: float, conductor: Conductor) -> str` (e.g. `"beat   12  -23.4 ms early"`); CLI `uv run python -m dino_shred.audio.check [--bpm 100] [--device N] [--input-channel 2] [--list] [--seconds 30]`.
 
-- [ ] **Step 1: Write the failing test for the pure helper**
+- [x] **Step 1: Write the failing test for the pure helper**
 
 `tests/test_check.py`:
 
@@ -937,12 +937,12 @@ def test_format_hit_reports_signed_error() -> None:
     assert "beat 5" in format_hit(102.98, c).replace("  ", " ")
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `uv run pytest tests/test_check.py -v`
 Expected: FAIL — module not found
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `dino_shred/audio/check.py`:
 
@@ -1038,7 +1038,7 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 4: Run test + lint, commit**
+- [x] **Step 4: Run test + lint, commit**
 
 Run: `uv run pytest tests/test_check.py -v` — Expected: 1 PASS
 
@@ -2383,7 +2383,6 @@ annotations for strict ty.
   are used with identical signatures at every consumption site.
 - Known judgment call: `Ground.update(speed)` is still per-frame-integrated (visual
   dashes only, no gameplay meaning) — acceptable; obstacles are the time-derived ones.
-
 
 
 
