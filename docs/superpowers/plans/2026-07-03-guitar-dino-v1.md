@@ -1268,7 +1268,7 @@ git commit -m "feat: Judge - timing windows, per-beat claiming, miss sweeping"
 - Consumes: `Conductor` (Task 3).
 - Produces: `compute_offset(errors: list[float]) -> tuple[float, float]` (median, MAD after 3·MAD rejection); `CalibrationSession(conductor: Conductor, min_hits: int = 20, discard: int = 4)` with `add_onset(onset_t: float) -> None`, `hits: int` property (post-discard count, clamped ≥0), `is_complete: bool` property, `result() -> tuple[float, float]`. Task 13's CALIBRATE state consumes exactly these.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_calibrate.py`:
 
@@ -1307,12 +1307,12 @@ def test_session_discards_warmup_and_completes() -> None:
     assert spread == pytest.approx(0.0, abs=1e-9)
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/test_calibrate.py -v`
 Expected: FAIL — module not found
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `dino_shred/rhythm/calibrate.py`:
 
@@ -1363,12 +1363,12 @@ class CalibrationSession:
 __all__ = ["CalibrationSession", "compute_offset"]
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/test_calibrate.py -v`
 Expected: 4 PASS
 
-- [ ] **Step 5: Lint, typecheck, commit**
+- [x] **Step 5: Lint, typecheck, commit**
 
 ```bash
 uv run ruff check && uv run ty check
