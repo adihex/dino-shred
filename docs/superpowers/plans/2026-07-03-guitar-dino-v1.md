@@ -1679,7 +1679,7 @@ git commit -m "feat: beat-anchored obstacles with time-derived motion + density-
 - Consumes: `Grade`, `Judgment` (Task 8), `config` (Task 1).
 - Produces: `format_error(error_s: float | None) -> str`; `error_bar_x(error_s: float, width: int, max_s: float = 0.1) -> int`; `histogram_bins(errors: list[float], n_bins: int = 20, range_s: float = 0.1) -> list[int]`; `GRADE_COLORS: dict[Grade, tuple[int, int, int]]`; `Hud()` with `add(judgment: Judgment, t: float) -> None`, `draw(screen: pygame.Surface, t: float, streak: int, bpm: float) -> None`, `draw_summary(screen: pygame.Surface, errors: list[float], counts: dict[Grade, int], best_streak: int) -> None`. Task 13 consumes `Hud`, Task 14 only renders through Task 13.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_hud.py`:
 
@@ -1708,12 +1708,12 @@ def test_histogram_bins_count_and_clip() -> None:
     assert bins[1] + bins[2] == 3  # the three near-zero errors sit centrally
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/test_hud.py -v`
 Expected: FAIL — module not found
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `dino_shred/game/hud.py`:
 
@@ -1822,12 +1822,12 @@ class Hud:
 __all__ = ["GRADE_COLORS", "Hud", "error_bar_x", "format_error", "histogram_bins"]
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/test_hud.py -v`
 Expected: 3 PASS
 
-- [ ] **Step 5: Lint, typecheck, commit**
+- [x] **Step 5: Lint, typecheck, commit**
 
 ```bash
 uv run ruff check && uv run ty check
