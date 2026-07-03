@@ -1064,7 +1064,7 @@ Checklist: ☐ TCC prompt appeared and was granted ☐ clicks audible in M-Track
 - Consumes: `Conductor` (Task 3).
 - Produces: `Grade` (Enum: `PERFECT, GOOD, OK, MISS, OFF_GRID`); `Judgment` (frozen dataclass: `grade: Grade`, `beat_n: int`, `error_s: float | None` — None for MISS); `Judge(conductor: Conductor, offset_s: float = 0.0, first_beat: int = 0, max_window_s: float = 0.100, sweep_margin_s: float = 0.05)` with `judge_onset(onset_t: float) -> Judgment`, `sweep_misses(now: float) -> list[Judgment]`, attrs `streak: int`, `best_streak: int`, `counts: dict[Grade, int]`, `errors: list[float]`. Task 13's game loop consumes exactly these. Sign convention: **negative error = early**.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_judge.py`:
 
@@ -1134,12 +1134,12 @@ def test_first_beat_skips_count_in() -> None:
     assert j.judge_onset(100.6).grade is Grade.OFF_GRID  # count-in beat not judged
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/test_judge.py -v`
 Expected: FAIL — module not found
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `dino_shred/rhythm/judge.py`:
 
@@ -1243,12 +1243,12 @@ class Judge:
 __all__ = ["WINDOWS", "Grade", "Judge", "Judgment"]
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/test_judge.py -v`
 Expected: all PASS (11 including parametrized)
 
-- [ ] **Step 5: Lint, typecheck, commit**
+- [x] **Step 5: Lint, typecheck, commit**
 
 ```bash
 uv run ruff check && uv run ty check
@@ -2383,7 +2383,4 @@ annotations for strict ty.
   are used with identical signatures at every consumption site.
 - Known judgment call: `Ground.update(speed)` is still per-frame-integrated (visual
   dashes only, no gameplay meaning) — acceptable; obstacles are the time-derived ones.
-
-
-
 
