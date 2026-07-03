@@ -5,14 +5,18 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "numpy>=2.5.0",
     "pygame>=2.6.1",
+    "sounddevice>=0.5.5",
 ]
 
 [dependency-groups]
 dev = [
     "ipykernel>=7.3.0",
     "ipython>=9.15.0",
+    "pytest>=9.1.1",
     "ruff>=0.15.20",
+    "soundfile>=0.14.0",
     "ty>=0.0.55",
 ]
 
@@ -29,3 +33,6 @@ known-first-party = ["dino_shred"]
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
