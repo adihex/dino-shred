@@ -13,5 +13,5 @@
 | Task 11 | Beat-anchored Obstacle + Spawner | Completed |
 | Task 12 | HUD — judgment feedback, error bar, histogram | Completed |
 | Task 13 | RhythmGame — state machine tying it all together | Completed |
-| Task 14 | App wiring — CLI, engine hookup, watchdogs, keyboard-only mode | In Progress |
-| Task 15 | Quality gate + docs refresh | Not Started |
+| Task 14 | App wiring — CLI, engine hookup, watchdogs, keyboard-only mode | Completed |
+| Task 15 | Quality gate + docs refresh | In Progress |

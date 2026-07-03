@@ -2134,7 +2134,7 @@ git commit -m "feat: RhythmGame state machine - play, calibrate, judge, collide"
 - Consumes: everything above; this is the composition root.
 - Produces: `build_parser() -> argparse.ArgumentParser`; `main(argv: list[str] | None = None) -> None`; `uv run python -m dino_shred [--bpm 80] [--device N] [--input-channel 2] [--keyboard-only] [--debug-hud]`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_app.py`:
 
@@ -2156,12 +2156,12 @@ def test_flags_parse() -> None:
     assert (args.bpm, args.device, args.keyboard_only, args.debug_hud) == (100.0, 3, True, True)
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/test_app.py -v`
 Expected: FAIL — module not found
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `dino_shred/game/app.py`:
 
@@ -2296,7 +2296,7 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 4: Run tests, lint, commit**
+- [x] **Step 4: Run tests, lint, commit**
 
 Run: `uv run pytest tests/test_app.py -v` — Expected: 2 PASS
 
@@ -2306,7 +2306,7 @@ git add dino_shred/game/app.py dino_shred/__main__.py tests/test_app.py
 git commit -m "feat: app wiring - CLI, engine hookup, watchdog banners, keyboard mode"
 ```
 
-- [ ] **Step 5: Smoke-test keyboard mode (works without hardware)**
+- [x] **Step 5: Smoke-test keyboard mode (works without hardware)**
 
 Run: `uv run python -m dino_shred --keyboard-only` — verify: menu shows, SPACE starts,
 SPACE jumps on beats (no click audio in this mode — expected), obstacles arrive, judgments
