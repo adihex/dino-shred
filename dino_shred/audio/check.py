@@ -28,7 +28,7 @@ def format_hit(onset_t: float, conductor: Conductor) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bpm", type=float, default=100.0)
-    parser.add_argument("--device", type=int, default=None)
+    parser.add_argument("--device", type=str, default=None)
     parser.add_argument("--input-channel", type=int, default=2)
     parser.add_argument("--seconds", type=float, default=30.0)
     parser.add_argument("--list", action="store_true", help="list devices and exit")
@@ -38,8 +38,15 @@ def main() -> None:
         print(sd.query_devices())
         return
 
+    from dino_shred.audio.engine import parse_device
+
+    device_arg = parse_device(args.device)
     try:
-        device = args.device if args.device is not None else find_device()
+        if isinstance(device_arg, str) or device_arg is None:
+            name = device_arg if device_arg is not None else "M-Track"
+            device = find_device(name)
+        else:
+            device = device_arg
     except DeviceNotFoundError as e:
         raise SystemExit(str(e)) from e
 

@@ -195,4 +195,27 @@ class AudioEngine:
         return peak
 
 
-__all__ = ["AudioEngine", "DeviceNotFoundError", "EngineStatus", "find_device"]
+def parse_device(device_str: str | None) -> int | tuple[int, int] | str | None:
+    if not device_str:
+        return None
+    if "," in device_str:
+        try:
+            parts = [int(x.strip()) for x in device_str.split(",")]
+            if len(parts) == 2:
+                return (parts[0], parts[1])
+        except ValueError:
+            pass
+    try:
+        return int(device_str)
+    except ValueError:
+        return device_str
+
+
+__all__ = [
+    "AudioEngine",
+    "DeviceNotFoundError",
+    "EngineStatus",
+    "find_device",
+    "parse_device",
+]
+

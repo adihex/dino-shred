@@ -19,7 +19,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dino-shred", description="Guitar-controlled rhythm trainer")
     p.add_argument("--bpm", type=float, default=80.0)
     p.add_argument(
-        "--device", type=int, default=None, help="sounddevice index (default: find M-Track)"
+        "--device", type=str, default=None, help="sounddevice index or name/pair (default: find M-Track)"
     )
     p.add_argument(
         "--input-channel",
@@ -37,11 +37,20 @@ def main(argv: list[str] | None = None) -> None:
 
     engine: AudioEngine | None = None
     if not args.keyboard_only:
+        from dino_shred.audio.engine import find_device, parse_device
+
         try:
+            device_arg = parse_device(args.device)
+            if isinstance(device_arg, str) or device_arg is None:
+                name = device_arg if device_arg is not None else "M-Track"
+                resolved_device = find_device(name)
+            else:
+                resolved_device = device_arg
+
             engine = AudioEngine(
                 detector=EnergyGate(),
                 scheduler=None,
-                device=args.device,
+                device=resolved_device,
                 input_channel=args.input_channel,
             )
             engine.start()

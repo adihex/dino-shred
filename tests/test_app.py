@@ -12,4 +12,4 @@ def test_flags_parse() -> None:
     args = build_parser().parse_args(
         ["--bpm", "100", "--device", "3", "--keyboard-only", "--debug-hud"]
     )
-    assert (args.bpm, args.device, args.keyboard_only, args.debug_hud) == (100.0, 3, True, True)
+    assert (args.bpm, args.device, args.keyboard_only, args.debug_hud) == (100.0, "3", True, True)
