@@ -26,11 +26,36 @@ class DeviceNotFoundError(RuntimeError):
     pass
 
 
-def find_device(name_substring: str = "M-Track") -> int:
+def find_device(name_substring: str = "M-Track") -> int | tuple[int, int]:
     devices = sd.query_devices()
+    
+    # Try finding a single duplex device first
+    for i, dev in enumerate(devices):
+        if (
+            name_substring.lower() in dev["name"].lower()
+            and dev["max_input_channels"] >= 2
+            and dev["max_output_channels"] >= 2
+        ):
+            return i
+
+    # Try finding separate input and output devices
+    input_idx = None
+    output_idx = None
+    for i, dev in enumerate(devices):
+        if name_substring.lower() in dev["name"].lower():
+            if dev["max_input_channels"] >= 2:
+                input_idx = i
+            if dev["max_output_channels"] >= 2:
+                output_idx = i
+
+    if input_idx is not None and output_idx is not None:
+        return (input_idx, output_idx)
+
+    # Fallback to first matching input device
     for i, dev in enumerate(devices):
         if name_substring.lower() in dev["name"].lower() and dev["max_input_channels"] >= 2:
             return i
+
     listing = "\n".join(f"  [{i}] {d['name']}" for i, d in enumerate(devices))
     raise DeviceNotFoundError(
         f"No input device matching {name_substring!r}. Available devices:\n{listing}\n"

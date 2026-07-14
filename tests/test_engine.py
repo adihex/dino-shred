@@ -89,3 +89,17 @@ def test_find_device_raises_with_device_listing(monkeypatch: pytest.MonkeyPatch)
     )
     with pytest.raises(DeviceNotFoundError, match="MacBook Pro Microphone"):
         find_device("M-Track")
+
+
+def test_find_device_split_input_output(monkeypatch: pytest.MonkeyPatch) -> None:
+    import dino_shred.audio.engine as engine_mod
+
+    devices = [
+        {"name": "USB AUDIO  CODEC", "max_input_channels": 0, "max_output_channels": 2},
+        {"name": "USB AUDIO  CODEC", "max_input_channels": 2, "max_output_channels": 0},
+    ]
+    monkeypatch.setattr(engine_mod.sd, "query_devices", lambda: devices)
+
+    result = engine_mod.find_device("USB AUDIO  CODEC")
+    assert result == (1, 0)
+
