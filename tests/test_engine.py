@@ -103,3 +103,30 @@ def test_find_device_split_input_output(monkeypatch: pytest.MonkeyPatch) -> None
     result = engine_mod.find_device("USB AUDIO  CODEC")
     assert result == (1, 0)
 
+
+def test_engine_start_with_split_devices(monkeypatch: pytest.MonkeyPatch) -> None:
+    import dino_shred.audio.engine as engine_mod
+
+    passed_device = None
+
+    class DummyStream:
+        def __init__(self, device, **kwargs):
+            nonlocal passed_device
+            passed_device = device
+        def start(self): pass
+        def stop(self): pass
+        def close(self): pass
+
+    monkeypatch.setattr(engine_mod.sd, "Stream", DummyStream)
+
+    # 1. Test with single device (integer)
+    eng_single = AudioEngine(detector=EnergyGate(), scheduler=None, device=1)
+    eng_single.start()
+    assert passed_device == (1, 1)
+
+    # 2. Test with split device (tuple)
+    eng_split = AudioEngine(detector=EnergyGate(), scheduler=None, device=(1, 0))
+    eng_split.start()
+    assert passed_device == (1, 0)
+
+

@@ -77,7 +77,7 @@ class AudioEngine:
         self,
         detector: EnergyGate,
         scheduler: ClickScheduler | None,
-        device: int | None = None,
+        device: int | tuple[int, int] | None = None,
         input_channel: int = 2,
         samplerate: int = 48000,
         blocksize: int = 256,
@@ -149,8 +149,13 @@ class AudioEngine:
             if sys.platform == "darwin"
             else None
         )
+        dev_param = (
+            device
+            if isinstance(device, (tuple, list)) and len(device) == 2
+            else (device, device)
+        )
         self._stream = sd.Stream(
-            device=(device, device),
+            device=dev_param,
             samplerate=self.samplerate,
             blocksize=self.blocksize,
             dtype="float32",
