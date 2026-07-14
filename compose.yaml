@@ -1,0 +1,6 @@
+services:
+  dinoshred:
+    image: dinoshred
+    build:
+      context: .
+      dockerfile: ./Dockerfile
