@@ -69,7 +69,7 @@ def test_calibration_flow_produces_offset() -> None:
     g.start_calibration(t_now=10.0)
     assert g.state is State.CALIBRATE
     assert g.conductor is not None
-    for n in range(26):
+    for n in range(24):
         g.handle_onset(ev(g.conductor.beat_time(n) + 0.040))
         g.update(g.conductor.beat_time(n) + 0.1)
     assert g.calibration_result is not None
@@ -83,3 +83,21 @@ def test_keyboard_space_acts_as_onset() -> None:
     assert g.conductor is not None
     g.handle_key(pygame.K_SPACE, down=True, t_now=g.conductor.beat_time(5))
     assert not g.dino.on_ground
+
+
+def test_onset_on_menu_or_game_over_starts_game() -> None:
+    # 1. On MENU state
+    g = RhythmGame(bpm=100.0)
+    assert g.state is State.MENU
+    g.handle_onset(ev(10.0))
+    assert g.state is State.PLAYING
+    assert g.conductor is not None
+    assert g.conductor.t0 == 11.0  # 1s lead-in
+
+    # 2. On GAME_OVER state
+    g.state = State.GAME_OVER
+    g.handle_onset(ev(20.0))
+    assert g.state is State.PLAYING
+    assert g.conductor is not None
+    assert g.conductor.t0 == 21.0
+

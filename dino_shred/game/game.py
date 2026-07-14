@@ -76,7 +76,9 @@ class RhythmGame:
     # -- inputs --------------------------------------------------------------------
 
     def handle_onset(self, ev: OnsetEvent) -> None:
-        if self.state is State.PLAYING and self.judge is not None:
+        if self.state in (State.MENU, State.GAME_OVER):
+            self.start_playing(ev.t)
+        elif self.state is State.PLAYING and self.judge is not None:
             self.dino.jump()
             judgment: Judgment = self.judge.judge_onset(ev.t)
             self.hud.add(judgment, ev.t)
