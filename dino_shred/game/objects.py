@@ -88,12 +88,13 @@ class Ground:
     DASH_LENGTH = 12
     DASH_GAP = 6
     DASH_Y = config.GROUND_Y + 2
+    PERIOD = DASH_LENGTH + DASH_GAP
 
     def __init__(self) -> None:
         self.scroll: float = 0.0
 
     def update(self, speed: float) -> None:
-        self.scroll = (self.scroll + speed) % (self.DASH_LENGTH + self.DASH_GAP)
+        self.scroll = (self.scroll + speed) % self.PERIOD
 
     def draw(self, screen: pygame.Surface) -> None:
         # horizon line
@@ -106,7 +107,6 @@ class Ground:
         )
 
         # scrolling dashes
-        period = self.DASH_LENGTH + self.DASH_GAP
         x = -self.scroll
         while x < config.SCREEN_W:
             pygame.draw.line(
@@ -116,7 +116,7 @@ class Ground:
                 (x + self.DASH_LENGTH, self.DASH_Y),
                 2,
             )
-            x += period
+            x += self.PERIOD
 
 
 class Obstacle:
