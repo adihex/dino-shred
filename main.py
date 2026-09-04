@@ -27,6 +27,14 @@ WHITE = (255, 255, 255)
 BLACK = (30, 30, 30)
 GREY = (83, 83, 83)
 DARK = (50, 50, 50)
+SKY_BLUE = (135, 206, 235)
+STITCH_BLUE = (0, 112, 204)
+STITCH_LIGHT_BLUE = (102, 178, 255)
+STITCH_EAR_PINK = (255, 153, 204)
+GRASS_GREEN = (34, 139, 34)
+DIRT_BROWN = (139, 69, 19)
+WOOD_BROWN = (160, 82, 45)
+LEAF_GREEN = (50, 205, 50)
 
 GROUND_Y = 310  # where the ground line sits
 GRAVITY = 0.8  # pixels/frame²
@@ -96,19 +104,82 @@ class Dino:
         h = self.DUCK_HEIGHT if self.ducking else self.HEIGHT
         y = self.y
 
-        body = pygame.Rect(self.x, y, self.WIDTH, h)
-        pygame.draw.rect(screen, DARK, body)
+        # Stitch body
+        body = pygame.Rect(self.x + 4, y + 10, self.WIDTH - 8, h - 10)
+        pygame.draw.rect(screen, STITCH_BLUE, body, border_radius=8)
 
-        # eye
-        eye_x = self.x + (30 if not self.ducking else 10)
-        eye_y = self.y + 12
-        pygame.draw.circle(screen, WHITE, (eye_x, eye_y), 4)
+        # Stitch belly/chest (lighter blue)
+        belly = pygame.Rect(self.x + 8, y + 20, self.WIDTH - 16, h - 20)
+        pygame.draw.rect(screen, STITCH_LIGHT_BLUE, belly, border_radius=6)
+
+        # Stitch head
+        head_y = y if not self.ducking else y + 10
+        head_w = self.WIDTH
+        head_h = 24
+        pygame.draw.ellipse(screen, STITCH_BLUE, (self.x, head_y, head_w, head_h))
+
+        # Big ears
+        ear_width = 16
+        ear_height = 8
+        if not self.ducking:
+            # Left ear
+            pygame.draw.ellipse(
+                screen, STITCH_BLUE, (self.x - 10, head_y + 4, ear_width, ear_height)
+            )
+            pygame.draw.ellipse(
+                screen, STITCH_EAR_PINK, (self.x - 8, head_y + 5, ear_width - 4, ear_height - 2)
+            )
+            # Right ear
+            pygame.draw.ellipse(
+                screen, STITCH_BLUE, (self.x + head_w - 6, head_y + 4, ear_width, ear_height)
+            )
+            pygame.draw.ellipse(
+                screen,
+                STITCH_EAR_PINK,
+                (self.x + head_w - 4, head_y + 5, ear_width - 4, ear_height - 2),
+            )
+        else:
+            # Pinned back ears when ducking
+            pygame.draw.ellipse(
+                screen, STITCH_BLUE, (self.x - 14, head_y + 8, ear_width, ear_height)
+            )
+            pygame.draw.ellipse(
+                screen, STITCH_EAR_PINK, (self.x - 12, head_y + 9, ear_width - 4, ear_height - 2)
+            )
+            pygame.draw.ellipse(
+                screen, STITCH_BLUE, (self.x + head_w - 2, head_y + 8, ear_width, ear_height)
+            )
+            pygame.draw.ellipse(
+                screen,
+                STITCH_EAR_PINK,
+                (self.x + head_w, head_y + 9, ear_width - 4, ear_height - 2),
+            )
+
+        # Big eyes
+        eye_spacing = 14
+        eye_y = head_y + 6
+        eye_x_left = self.x + 12
+        eye_x_right = eye_x_left + eye_spacing
+
+        # Outer eye (dark/black part)
+        pygame.draw.ellipse(screen, BLACK, (eye_x_left, eye_y, 8, 10))
+        pygame.draw.ellipse(screen, BLACK, (eye_x_right, eye_y, 8, 10))
+        # Inner eye (pupil shine)
+        pygame.draw.circle(screen, WHITE, (eye_x_left + 4, eye_y + 3), 2)
+        pygame.draw.circle(screen, WHITE, (eye_x_right + 4, eye_y + 3), 2)
+
+        # Little nose
+        pygame.draw.ellipse(screen, DARK, (self.x + 18, head_y + 14, 6, 4))
 
         # legs — little animated touch
         leg_offset = 3 if (pygame.time.get_ticks() // 150) % 2 == 0 else -3
-        leg_y = self.y + h
-        pygame.draw.rect(screen, DARK, (self.x + 8, leg_y, 6, 6 + leg_offset))
-        pygame.draw.rect(screen, DARK, (self.x + 20, leg_y, 6, 6 - leg_offset))
+        leg_y = self.y + h - 2
+        pygame.draw.rect(
+            screen, STITCH_BLUE, (self.x + 12, leg_y, 6, 6 + leg_offset), border_radius=2
+        )
+        pygame.draw.rect(
+            screen, STITCH_BLUE, (self.x + 24, leg_y, 6, 6 - leg_offset), border_radius=2
+        )
 
     # -- hitbox for collisions -------------------------------------------------
 
@@ -161,15 +232,108 @@ class Obstacle:
         return self.x + self.width < 0
 
     def draw(self, screen: pygame.Surface) -> None:
-        rect = pygame.Rect(self.x, self.y, self.width, self.height)
         if self.variant in (0, 1):
-            pygame.draw.rect(screen, GREY, rect)
+            # Alien plant / Palm tree trunk
+            trunk_w = 8
+            trunk_x = self.x + (self.width - trunk_w) // 2
+            pygame.draw.rect(screen, WOOD_BROWN, (trunk_x, self.y + 10, trunk_w, self.height - 10))
+
+            # Alien plant leaves
+            leaf_color = LEAF_GREEN
+            if self.variant == 0:
+                # Small plant
+                pygame.draw.ellipse(screen, leaf_color, (self.x, self.y, self.width, 20))
+            else:
+                # Tall plant (multiple layers)
+                pygame.draw.ellipse(screen, leaf_color, (self.x, self.y, self.width, 20))
+                pygame.draw.ellipse(
+                    screen, leaf_color, (self.x - 4, self.y + 10, self.width + 8, 20)
+                )
         else:
-            pygame.draw.rect(screen, (120, 120, 120), rect)
+            # Alien bird/creature
+            wing_offset = 6 if (pygame.time.get_ticks() // 150) % 2 == 0 else -6
+            body_color = (200, 50, 50)  # Red alien bird
+
+            # body
+            pygame.draw.ellipse(screen, body_color, (self.x + 8, self.y + 8, self.width - 16, 12))
+
+            # wings
+            pygame.draw.polygon(
+                screen,
+                body_color,
+                [
+                    (self.x + self.width // 2, self.y + 10),
+                    (self.x + self.width // 2 - 10, self.y + 10 + wing_offset),
+                    (self.x + self.width // 2 + 10, self.y + 10 + wing_offset),
+                ],
+            )
+
+            # head
+            pygame.draw.circle(screen, body_color, (int(self.x + 12), int(self.y + 10)), 6)
+            # eye
+            pygame.draw.circle(screen, WHITE, (int(self.x + 10), int(self.y + 8)), 2)
 
     @property
     def rect(self) -> pygame.Rect:
         return pygame.Rect(self.x + 2, self.y + 2, self.width - 4, self.height - 4)
+
+
+class Cloud:
+    """
+    Scrolling cloud in the background.
+    """
+
+    def __init__(self) -> None:
+        self.x: float = random.randint(SCREEN_W, SCREEN_W + 400)
+        self.y: float = random.randint(20, 150)
+        self.speed: float = BASE_SPEED * 0.2 + random.random() * 1.5
+        self.scale: float = random.uniform(0.6, 1.2)
+
+    def update(self, speed: float) -> None:
+        self.x -= self.speed * (speed / BASE_SPEED)
+        if self.x < -100:
+            self.x = random.randint(SCREEN_W, SCREEN_W + 100)
+            self.y = random.randint(20, 150)
+
+    def draw(self, screen: pygame.Surface) -> None:
+        # draw a simple cloud shape using circles
+        r = int(20 * self.scale)
+        pygame.draw.circle(screen, WHITE, (int(self.x), int(self.y)), r)
+        pygame.draw.circle(
+            screen,
+            WHITE,
+            (int(self.x + 20 * self.scale), int(self.y + 10 * self.scale)),
+            int(15 * self.scale),
+        )
+        pygame.draw.circle(
+            screen,
+            WHITE,
+            (int(self.x - 20 * self.scale), int(self.y + 10 * self.scale)),
+            int(15 * self.scale),
+        )
+        pygame.draw.circle(
+            screen,
+            WHITE,
+            (int(self.x + 35 * self.scale), int(self.y + 20 * self.scale)),
+            int(12 * self.scale),
+        )
+        pygame.draw.circle(
+            screen,
+            WHITE,
+            (int(self.x - 35 * self.scale), int(self.y + 20 * self.scale)),
+            int(12 * self.scale),
+        )
+        # base rect
+        pygame.draw.rect(
+            screen,
+            WHITE,
+            (
+                int(self.x - 35 * self.scale),
+                int(self.y + 10 * self.scale),
+                int(70 * self.scale),
+                int(22 * self.scale),
+            ),
+        )
 
 
 class Ground:
@@ -179,7 +343,7 @@ class Ground:
 
     DASH_LENGTH = 12
     DASH_GAP = 6
-    DASH_Y = GROUND_Y + 2
+    DASH_Y = GROUND_Y + 10
 
     def __init__(self) -> None:
         self.scroll: float = 0.0
@@ -188,10 +352,14 @@ class Ground:
         self.scroll = (self.scroll + speed) % (self.DASH_LENGTH + self.DASH_GAP)
 
     def draw(self, screen: pygame.Surface) -> None:
+        # grass
+        pygame.draw.rect(screen, GRASS_GREEN, (0, GROUND_Y, SCREEN_W, SCREEN_H - GROUND_Y))
+        # dirt below grass
+        pygame.draw.rect(screen, DIRT_BROWN, (0, GROUND_Y + 20, SCREEN_W, SCREEN_H - GROUND_Y - 20))
         # horizon line
         pygame.draw.line(screen, DARK, (0, GROUND_Y), (SCREEN_W, GROUND_Y), 2)
 
-        # scrolling dashes
+        # scrolling dashes for dirt texture
         period = self.DASH_LENGTH + self.DASH_GAP
         x = -self.scroll
         while x < SCREEN_W:
@@ -200,6 +368,13 @@ class Ground:
                 DARK,
                 (x, self.DASH_Y),
                 (x + self.DASH_LENGTH, self.DASH_Y),
+                2,
+            )
+            pygame.draw.line(
+                screen,
+                DARK,
+                (x + period // 2, self.DASH_Y + 15),
+                (x + period // 2 + self.DASH_LENGTH, self.DASH_Y + 15),
                 2,
             )
             x += period
@@ -213,6 +388,7 @@ class Game:
         self.state: str = "START"  # START | PLAYING | GAME_OVER
         self.dino: Dino = Dino()
         self.ground: Ground = Ground()
+        self.clouds: list[Cloud] = [Cloud() for _ in range(3)]
         self.obstacles: list[Obstacle] = []  # object-pool list (principle #2)
         self.score: int = 0
         self.high_score: int = 0
@@ -254,6 +430,10 @@ class Game:
         # --- dino
         self.dino.update()
 
+        # --- background
+        for cloud in self.clouds:
+            cloud.update(self.speed)
+
         # --- ground
         self.ground.update(self.speed)
 
@@ -289,7 +469,10 @@ class Game:
     # -- render ---------------------------------------------------------------
 
     def draw(self, screen: pygame.Surface) -> None:
-        screen.fill(WHITE)
+        screen.fill(SKY_BLUE)
+
+        for cloud in self.clouds:
+            cloud.draw(screen)
 
         self.ground.draw(screen)
         self.dino.draw(screen)
@@ -297,28 +480,39 @@ class Game:
             obs.draw(screen)
 
         # --- HUD ---
-        score_surf = self.font.render(f"Score: {self.score:05d}", True, GREY)
+        # Draw shadow
+        score_shadow = self.font.render(f"Score: {self.score:05d}", True, BLACK)
+        screen.blit(score_shadow, (SCREEN_W - 149, 21))
+        score_surf = self.font.render(f"Score: {self.score:05d}", True, WHITE)
         screen.blit(score_surf, (SCREEN_W - 150, 20))
 
-        hi_surf = self.font.render(f"HI: {self.high_score:05d}", True, GREY)
+        hi_shadow = self.font.render(f"HI: {self.high_score:05d}", True, BLACK)
+        screen.blit(hi_shadow, (SCREEN_W - 299, 21))
+        hi_surf = self.font.render(f"HI: {self.high_score:05d}", True, WHITE)
         screen.blit(hi_surf, (SCREEN_W - 300, 20))
 
         # --- state overlays ---
         if self.state == "START":
-            self._draw_overlay(screen, "DINO SHRED", "Press SPACE  or  ↑  to start")
+            self._draw_overlay(screen, "STITCH RUNNER", "Press SPACE  or  ↑  to start")
         elif self.state == "GAME_OVER":
             self._draw_overlay(screen, "GAME OVER", "Press SPACE  or  ↑  to retry")
 
     def _draw_overlay(self, screen: pygame.Surface, title: str, subtitle: str) -> None:
-        # semi-transparent backdrop
+        # semi-transparent backdrop with a bit of a blue tint
         s = pygame.Surface((SCREEN_W, SCREEN_H), pygame.SRCALPHA)
-        s.fill((255, 255, 255, 120))
+        s.fill((0, 50, 150, 100))
         screen.blit(s, (0, 0))
 
-        t = self.big_font.render(title, True, DARK)
+        # title with shadow
+        ts = self.big_font.render(title, True, BLACK)
+        screen.blit(ts, (SCREEN_W // 2 - ts.get_width() // 2 + 2, SCREEN_H // 2 - 78))
+        t = self.big_font.render(title, True, WHITE)
         screen.blit(t, (SCREEN_W // 2 - t.get_width() // 2, SCREEN_H // 2 - 80))
 
-        st = self.font.render(subtitle, True, GREY)
+        # subtitle with shadow
+        sts = self.font.render(subtitle, True, BLACK)
+        screen.blit(sts, (SCREEN_W // 2 - sts.get_width() // 2 + 1, SCREEN_H // 2 - 29))
+        st = self.font.render(subtitle, True, (200, 230, 255))
         screen.blit(st, (SCREEN_W // 2 - st.get_width() // 2, SCREEN_H // 2 - 30))
 
     # -- input abstraction (core principle #3) ---------------------------------
