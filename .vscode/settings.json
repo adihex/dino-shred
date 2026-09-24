@@ -2,10 +2,9 @@
     // ── Python Language Server ──────────────────────
     "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
     "python.analysis.typeCheckingMode": "strict",
-
     // ── Type checker: ty (Astral) ──────────────────
-    // ty doesn't have a VS Code extension yet — use CLI:
-    //   ty check main.py
+    // Stop python extension's language server from running, since we are using ty for type checking.
+    "python.languageServer": "None",
 
     // ── Formatter: ruff ────────────────────────────
     "[python]": {
@@ -16,7 +15,6 @@
             "source.organizeImports.ruff": "explicit"
         }
     },
-
     // ── Notebooks ──────────────────────────────────
     "notebook.defaultFormatter": "charliermarsh.ruff",
     "notebook.formatOnSave.enabled": true,
